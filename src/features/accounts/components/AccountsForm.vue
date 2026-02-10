@@ -64,7 +64,7 @@
                             :type="account.showPassword ? 'text' : 'password'" outlined dense
                             :error="hasError(account.id, 'password')" @blur="validateAccount(account.id)">
                             <template v-slot:append>
-                                <q-icon :name="account.showPassword ? 'visibility_off' : 'visibility'"
+                                <q-icon :name="account.showPassword ? 'visibility' : 'visibility_off'"
                                     class="cursor-pointer" @click="togglePasswordVisibility(account.id)" size="xs" />
                             </template>
                         </q-input>
