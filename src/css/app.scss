@@ -1,1 +1,150 @@
 // app global css in SCSS form
+//-----------Fonts(Шрифты)-----------Fonts(Шрифты)-----------Fonts(Шрифты)-----------Fonts(Шрифты)-----------Fonts(Шрифты)-----------Fonts(Шрифты)-----------
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-VariableFont_wght.ttf");
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-VariableFont_wght.ttf");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-VariableFont_wght.ttf");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-VariableFont_wght.ttf");
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-VariableFont_wght.ttf");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-Italic-VariableFont_wght.ttf");
+  font-weight: bold;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-Italic-VariableFont_wght.ttf");
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("./fonts/Inter-Italic-VariableFont_wght.ttf");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+//-----------Стили для автозаполнения в Chrome, Safari и Edge-----------Стили для автозаполнения в Chrome, Safari и Edge-----------Стили для автозаполнения в Chrome, Safari и Edge-----------Стили для автозаполнения в Chrome, Safari и Edge-----------Стили для автозаполнения в Chrome, Safari и Edge-----------Стили для автозаполнения в Chrome, Safari и Edge-----------
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--q-primary) !important; // var() лучше работает при смене тем и выхода\входа из приложения
+  /* Цвет текста (primary цвет) */
+  -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+  /* Белый фон */
+  transition: background-color 5000s ease-in-out 0s !important;
+  /* Для плавного изменения */
+  caret-color: var(--q-primary) !important;
+  /* Цвет курсора */
+}
+
+/* Для темной темы */
+.body--dark input:-webkit-autofill,
+.body--dark input:-webkit-autofill:hover,
+.body--dark input:-webkit-autofill:focus,
+.body--dark input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px $dark inset !important;
+  /* Темный фон */
+}
+
+
+//-----------Scrollbar-----------------Scrollbar-----------------Scrollbar-----------------Scrollbar-----------------Scrollbar-----------------Scrollbar-----------------
+
+// Diffrent scrollbar
+::-webkit-scrollbar {
+  width: 8px;
+  height: 3px;
+}
+
+::-webkit-scrollbar-button {
+  background-color: var(--q-sliderEnds);
+}
+
+::-webkit-scrollbar-track {
+  background-color: $secondary;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: var(--q-pageUtility);
+}
+
+::-webkit-scrollbar-thumb {
+  height: 50px;
+  background-color: $secondary;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: var(--q-pageUtility);
+}
+
+::-webkit-resizer {
+  background-color: var(--q-sliderEnds);
+}
+
+// Скрытие нативных стрелок при вводе чисел в формах
+/* For Webkit browsers (Chrome, Safari, Edge, Opera) */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  /* Removes the default appearance */
+  margin: 0;
+  /* Removes the margin in older versions of Chrome */
+}
+
+/* For Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+  /* Keeps it looking like a normal text input */
+  appearance: none;
+  /* Standard property for other modern browsers */
+}
+
+// Это класс общего назначения для q-page, запрещающий скролл (максимальная высота нужна для его родителя)
+.q-page-mobile-noscroll {
+  @media (max-width: $breakpoint-sm) {
+    max-height: 50vh;
+    overflow: hidden;
+  }
+}

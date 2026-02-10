@@ -12,7 +12,10 @@
 // to match your app's branding.
 // Tip: Use the "Theme Builder" on Quasar's documentation website.
 
-$primary   : #1976D2;
+// шрифты
+$typography-font-family: "Inter", "Roboto", "-apple-system", "Helvetica Neue", Helvetica, Arial, sans-serif !default;
+
+$primary   : #165996;
 $secondary : #26A69A;
 $accent    : #9C27B0;
 
@@ -23,3 +26,29 @@ $positive  : #21BA45;
 $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
+
+// Light theme
+.body--light {
+  --q-pageUtility: #ffffff;
+  --q-pageUtilityContrast: #1a1a1a;
+  --q-pageUtilityContrastLow: #bebebe;
+  --q-sliderEnds: #eeeeee;
+  --q-primary-contrast: #ABE5FD;
+}
+
+// Dark theme
+.body--dark {
+  --q-primary: #5258aa;
+  // --q-primary: #5a61b9;
+  // --q-secondary: #26a69a;
+  // --q-accent: #9d3ead;
+  --q-positive: #22aa42;
+  --q-negative: #ca2e33;
+  --q-info: #27a8c2;
+  // --q-warning: #f2c037;
+  --q-pageUtility: #1D1D1D;
+  --q-pageUtilityContrast: #e0e0e0;
+  --q-pageUtilityContrastLow: #505050;
+  --q-sliderEnds: #2e2e2e;
+  --q-primary-contrast: #abbafd;
+}
