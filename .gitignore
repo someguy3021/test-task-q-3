@@ -31,3 +31,5 @@ yarn-error.log*
 
 # local .env files
 .env.local*
+_devTools_output
+_mock_server/db.json
