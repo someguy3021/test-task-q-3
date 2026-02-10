@@ -438,7 +438,6 @@ watch(accounts, () => {
     border: 2px dashed #e0e0e0;
     border-radius: 8px;
     margin-top: 32px;
-    background-color: #fafafa;
 }
 
 // Адаптивность
