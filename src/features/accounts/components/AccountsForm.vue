@@ -435,7 +435,7 @@ watch(accounts, () => {
 }
 
 .empty-state {
-    border: 2px dashed #e0e0e0;
+    border: 2px dashed var(--q-pageUtilityContrastLow);
     border-radius: 8px;
     margin-top: 32px;
 }
