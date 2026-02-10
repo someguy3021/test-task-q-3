@@ -126,6 +126,54 @@ export default {
       dev: 'Development: quasar dev',
       build: 'Build: quasar build',
       deploy: 'Deploy on Vercel platform'
+    },
+    implementedFeatures: {
+      formManagement: {
+        title: 'Account Management Form',
+        desc: 'Fully functional form with validation',
+        details: [
+          'Add/remove accounts',
+          'Validation of required fields',
+          'Converting labels to array of objects',
+          'Saving to localStorage'
+        ]
+      },
+      accountTypes: {
+        title: 'Two Types of Accounts',
+        desc: 'LDAP and local with different behavior',
+        details: [
+          'LDAP: password is hidden and saved as null',
+          'Local: password is required',
+          'Dynamic field display'
+        ]
+      },
+      fieldValidation: {
+        title: 'Field Validation',
+        desc: 'Checking for required fields and maximum length',
+        details: [
+          'Label: up to 50 characters, optional',
+          'Login: up to 100 characters, required',
+          'Password: up to 100 characters, required for local'
+        ]
+      },
+      statePersistence: {
+        title: 'State Persistence',
+        desc: 'Saves data between sessions',
+        details: [
+          'Using Pinia for state management',
+          'Saving to localStorage',
+          'Automatic loading on initialization'
+        ]
+      },
+      responsiveDesign: {
+        title: 'Responsive Design',
+        desc: 'Correct display on all devices',
+        details: [
+          'Mobile-first approach',
+          'Adaptive Quasar grid',
+          'Convenient UX on touch devices'
+        ]
+      }
     }
   },
   ErrorNotFound: {

@@ -16,7 +16,7 @@
             <q-card class="q-mb-xl" flat bordered>
                 <q-card-section>
                     <div class="text-h4 q-mb-md">
-                        Выполнение технического задания
+                        {{ t('AboutThisProjectPage.implementedFeatures.title', 'Выполнение технического задания') }}
                     </div>
 
                     <q-list bordered separator>
@@ -193,7 +193,7 @@
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
-const { t } = useI18n();
+const { t, tm } = useI18n();
 
 // Технологии - статические, но с переведенными описаниями
 const technologies = computed(() => [
@@ -330,50 +330,29 @@ const features = computed(() => [
 // Реализованные функции согласно ТЗ
 const implementedFeatures = computed(() => [
     {
-        title: 'Форма управления учетными записями',
-        desc: 'Полностью функциональная форма с валидацией',
-        details: [
-            'Добавление/удаление учетных записей',
-            'Валидация обязательных полей',
-            'Преобразование меток в массив объектов',
-            'Сохранение в localStorage'
-        ]
+        title: t('pages.AboutThisProjectPage.implementedFeatures.formManagement.title'),
+        desc: t('pages.AboutThisProjectPage.implementedFeatures.formManagement.desc'),
+        details: tm('pages.AboutThisProjectPage.implementedFeatures.formManagement.details')
     },
     {
-        title: 'Два типа учетных записей',
-        desc: 'LDAP и локальные с разным поведением',
-        details: [
-            'LDAP: пароль скрыт и сохраняется как null',
-            'Локальная: пароль обязателен для заполнения',
-            'Динамическое отображение полей'
-        ]
+        title: t('pages.AboutThisProjectPage.implementedFeatures.accountTypes.title'),
+        desc: t('pages.AboutThisProjectPage.implementedFeatures.accountTypes.desc'),
+        details: tm('pages.AboutThisProjectPage.implementedFeatures.accountTypes.details')
     },
     {
-        title: 'Валидация полей',
-        desc: 'Проверка на обязательность и максимальную длину',
-        details: [
-            'Метка: до 50 символов, необязательное',
-            'Логин: до 100 символов, обязательное',
-            'Пароль: до 100 символов, обязательное для локальных'
-        ]
+        title: t('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.title'),
+        desc: t('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.desc'),
+        details: tm('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.details')
     },
     {
-        title: 'Сохранение состояния',
-        desc: 'Сохраняет данные между сессиями',
-        details: [
-            'Использование Pinia для state management',
-            'Сохранение в localStorage',
-            'Автоматическая загрузка при инициализации'
-        ]
+        title: t('pages.AboutThisProjectPage.implementedFeatures.statePersistence.title'),
+        desc: t('pages.AboutThisProjectPage.implementedFeatures.statePersistence.desc'),
+        details: tm('pages.AboutThisProjectPage.implementedFeatures.statePersistence.details')
     },
     {
-        title: 'Адаптивный дизайн',
-        desc: 'Корректное отображение на всех устройствах',
-        details: [
-            'Mobile-first подход',
-            'Адаптивная сетка Quasar',
-            'Удобный UX на touch-устройствах'
-        ]
+        title: t('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.title'),
+        desc: t('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.desc'),
+        details: tm('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.details')
     }
 ])
 </script>

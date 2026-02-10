@@ -126,6 +126,54 @@ export default {
       dev: 'Desarrollo: quasar dev',
       build: 'Compilación: quasar build',
       deploy: 'Despliegue en plataforma Vercel'
+    },
+    implementedFeatures: {
+      formManagement: {
+        title: 'Formulario de gestión de cuentas',
+        desc: 'Formulario completamente funcional con validación',
+        details: [
+          'Agregar/eliminar cuentas',
+          'Validación de campos obligatorios',
+          'Conversión de etiquetas en matriz de objetos',
+          'Guardar en localStorage'
+        ]
+      },
+      accountTypes: {
+        title: 'Dos tipos de cuentas',
+        desc: 'LDAP y local con comportamiento diferente',
+        details: [
+          'LDAP: la contraseña está oculta y se guarda como null',
+          'Local: la contraseña es obligatoria',
+          'Visualización dinámica de campos'
+        ]
+      },
+      fieldValidation: {
+        title: 'Validación de campos',
+        desc: 'Comprobación de campos obligatorios y longitud máxima',
+        details: [
+          'Etiqueta: hasta 50 caracteres, opcional',
+          'Inicio de sesión: hasta 100 caracteres, obligatorio',
+          'Contraseña: hasta 100 caracteres, obligatorio para local'
+        ]
+      },
+      statePersistence: {
+        title: 'Persistencia del estado',
+        desc: 'Guarda datos entre sesiones',
+        details: [
+          'Uso de Pinia para gestión de estado',
+          'Guardar en localStorage',
+          'Carga automática en la inicialización'
+        ]
+      },
+      responsiveDesign: {
+        title: 'Diseño responsivo',
+        desc: 'Visualización correcta en todos los dispositivos',
+        details: [
+          'Enfoque mobile-first',
+          'Cuadrícula adaptable de Quasar',
+          'UX conveniente en dispositivos táctiles'
+        ]
+      }
     }
   },
   ErrorNotFound: {
