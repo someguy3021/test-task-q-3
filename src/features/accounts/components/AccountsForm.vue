@@ -25,6 +25,12 @@
             <div v-for="account in accountData" :key="account.id" class="account-item q-mb-sm q-pa-md"
                 :class="{ 'invalid-account': !account.isValid }">
                 <div class="row items-center q-col-gutter-md">
+                    <div class="col-12" v-if="$q.screen.lt.md">
+                        <div class="mobile-delete-btn flex justify-end q-mb-sm">
+                            <q-btn flat round color="negative" icon="delete" size="md"
+                                :title="t('components.AccountsForm.delete')" @click="showDeleteDialog(account.id)" />
+                        </div>
+                    </div>
                     <!-- Метка (TextArea с авторастягиванием) -->
                     <div class="col-12 col-md-3">
                         <q-input :model-value="account.label"
@@ -73,7 +79,7 @@
                     <!-- Пустая колонка для LDAP (не показываем) -->
 
                     <!-- Кнопка удаления -->
-                    <div class="col-12 col-md-1 text-center">
+                    <div class="col-12 col-md-1 text-center" v-if="!$q.screen.lt.md">
                         <q-btn flat round color="negative" icon="delete" size="md"
                             :title="t('components.AccountsForm.delete')" @click="showDeleteDialog(account.id)" />
                     </div>
