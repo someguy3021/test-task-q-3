@@ -17,7 +17,7 @@
                 :class="{ 'invalid-account': !account.isValid }">
                 <div class="account-header row justify-between items-center q-mb-md">
                     <div class="text-subtitle1">{{ t('components.AccountsForm.account_label') }}</div>
-                    <q-btn flat round color="negative" icon="delete" size="sm"
+                    <q-btn flat round color="negative" icon="delete" size="md"
                         :title="t('components.AccountsForm.delete')" @click="showDeleteDialog(account.id)" />
                 </div>
 
