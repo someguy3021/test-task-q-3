@@ -223,7 +223,8 @@ const routeToTranslationKey: Record<string, string> = {
   'inbox': 'layouts.main_layout.Inbox',
   'login': 'layouts.main_layout.LoginPage',
   'orders': 'layouts.main_layout.OrdersPage',
-  'error-not-found': 'layouts.main_layout.ErrorNotFound'
+  'error-not-found': 'layouts.main_layout.ErrorNotFound',
+  'testtask': 'layouts.main_layout.TestForm'
 };
 
 // Динамические breadcrumbs с i18n
@@ -290,9 +291,9 @@ const sidebarLinks = computed((): NavLink[] => [
     link: '/'
   },
   {
-    title: t('layouts.main_layout.UsersManagement'),
-    icon: 'people',
-    linkByName: 'users'
+    title: t('layouts.main_layout.TestForm'),
+    icon: 'assignment',
+    linkByName: 'testtask'
   }
 ]);
 
