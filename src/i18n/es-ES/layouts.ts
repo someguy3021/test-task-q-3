@@ -15,7 +15,7 @@ export default {
     Inbox: 'Buzón',
     Home: 'Inicio',
     UsersManagement: 'Usuarios',
-    TestForm: 'Тестовая форма',
+    TestForm: 'Formulario de prueba',
     AboutProject: 'Sobre el proyecto',
     Settings: {
       title: 'Configuración de interfaz',

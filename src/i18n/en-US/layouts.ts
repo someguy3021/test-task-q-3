@@ -15,7 +15,7 @@ export default {
     Inbox: 'Inbox',
     Home: 'Home',
     UsersManagement: 'Users',
-    TestForm: 'Тестовая форма',
+    TestForm: 'Test form',
     AboutProject: 'About this project',
     Settings: {
       title: 'Interface Settings',
