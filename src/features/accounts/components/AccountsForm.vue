@@ -16,8 +16,8 @@
         <div class="desktop-header row q-mb-sm text-caption text-grey-7 q-px-md">
             <div class="col-3">{{ t('components.AccountsForm.label') }}</div>
             <div class="col-2">{{ t('components.AccountsForm.type_label') }}</div>
-            <div class="col-3">{{ t('components.AccountsForm.login_label') }}</div>
-            <div class="col-3">{{ t('components.AccountsForm.password_label') }}</div>
+            <div :class="getLoginColumnClass()">{{ t('components.AccountsForm.login_label') }}</div>
+            <div class="col-3" v-if="hasLocalAccount">{{ t('components.AccountsForm.password_label') }}</div>
             <div class="col-1 text-center">{{ t('components.AccountsForm.actions') }}</div>
         </div>
 
@@ -25,13 +25,14 @@
             <div v-for="account in accountData" :key="account.id" class="account-item q-mb-sm q-pa-md"
                 :class="{ 'invalid-account': !account.isValid }">
                 <div class="row items-center q-col-gutter-md">
-                    <!-- Метка -->
+                    <!-- Метка (TextArea с авторастягиванием) -->
                     <div class="col-12 col-md-3">
                         <q-input :model-value="account.label"
                             @update:model-value="(value) => updateField(account.id, 'label', value)"
                             :placeholder="t('components.AccountsForm.label_placeholder')"
-                            :hint="t('components.AccountsForm.label_hint')" :maxlength="50" outlined dense autogrow
-                            :error="hasError(account.id, 'label')" @blur="validateAccount(account.id)">
+                            :hint="t('components.AccountsForm.label_hint')" :maxlength="50" outlined dense
+                            type="textarea" autogrow :error="hasError(account.id, 'label')"
+                            @blur="validateAccount(account.id)" rows="1">
                             <template v-slot:append>
                                 <q-icon v-if="account.label.length > 45" name="warning" color="warning" size="xs" />
                             </template>
@@ -45,8 +46,8 @@
                             :error="hasError(account.id, 'type')" />
                     </div>
 
-                    <!-- Логин -->
-                    <div class="col-12 col-md-3">
+                    <!-- Логин (растягивается для LDAP) -->
+                    <div :class="getLoginColumnClass(account.type)">
                         <q-input :model-value="account.login"
                             @update:model-value="(value) => updateField(account.id, 'login', value)"
                             :placeholder="t('components.AccountsForm.login_placeholder')"
@@ -69,12 +70,7 @@
                         </q-input>
                     </div>
 
-                    <!-- Пустая колонка для LDAP -->
-                    <div v-else class="col-12 col-md-3">
-                        <div class="text-caption text-grey-6 q-pa-sm bg-grey-2 rounded-borders">
-                            {{ t('components.AccountsForm.ldap_password_hint') }}
-                        </div>
-                    </div>
+                    <!-- Пустая колонка для LDAP (не показываем) -->
 
                     <!-- Кнопка удаления -->
                     <div class="col-12 col-md-1 text-center">
@@ -141,6 +137,19 @@ const typeOptions = computed(() => [
     { label: t('components.AccountsForm.type_options.local'), value: 'local' }
 ])
 
+
+const hasLocalAccount = computed(() => {
+    return accountData.value.some(account => account.type === 'local')
+})
+const getLoginColumnClass = (accountType?: 'ldap' | 'local') => {
+    if (accountType === 'ldap') {
+        return 'col-12 col-md-6'
+    } else if (accountType === 'local') {
+        return 'col-12 col-md-3'
+    }
+    return hasLocalAccount.value ? 'col-12 col-md-3' : 'col-12 col-md-6'
+}
+
 const initializeAccountData = () => {
     accountData.value = accounts.value.map(account => ({
         ...account,
@@ -166,7 +175,7 @@ const handleTypeChange = (accountId: string, value: 'ldap' | 'local') => {
         ...account,
         type: value,
         // При смене на LDAP сбрасываем пароль
-        ...(value === 'ldap' ? { password: null } : {})
+        ...(value === 'ldap' ? { password: null, showPassword: false } : {})
     }
 
     accountData.value[accountIndex] = updatedAccount
@@ -348,7 +357,7 @@ watch(accounts, () => {
 }
 
 .label-hint {
-    background-color: rgba(152, 212, 255, 0.45);
+    background-color: rgba(152, 212, 255, 0.082);
     padding: 12px 16px;
     border-radius: 8px;
     display: flex;
@@ -372,7 +381,7 @@ watch(accounts, () => {
     transition: all 0.3s ease;
 
     &.invalid-account {
-        border-color: #f44336;
+        border-color: var(--q-negative);
         background-color: rgba(244, 67, 54, 0.03);
     }
 
@@ -392,7 +401,7 @@ watch(accounts, () => {
     background-color: rgba(244, 67, 54, 0.05);
     padding: 8px 12px;
     border-radius: 4px;
-    border-left: 3px solid #f44336;
+    border-left: 3px solid var(--q-negative);
 }
 
 .error-message {
@@ -406,7 +415,7 @@ watch(accounts, () => {
 }
 
 .label-preview {
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--q-pageUtilityContrastLow);
     padding-top: 12px;
     margin-top: 12px;
 }
