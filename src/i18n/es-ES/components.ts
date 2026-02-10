@@ -42,6 +42,17 @@ export default {
       title: 'Sin cuentas',
       message: 'Haga clic en "Agregar cuenta" para crear el primer registro'
     },
-    warning: 'Advertencia'
+    warning: 'Advertencia',
+    // Nuevos campos para diálogo y notificaciones
+    delete_dialog: {
+      title: 'Eliminar cuenta',
+      message: '¿Está seguro de que desea eliminar esta cuenta?',
+      cancel: 'Cancelar',
+      confirm: 'Eliminar'
+    },
+    notifications: {
+      delete_success: 'Cuenta eliminada exitosamente',
+      delete_error: 'Error al eliminar la cuenta'
+    }
   }
 } as const

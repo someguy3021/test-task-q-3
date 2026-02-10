@@ -18,7 +18,7 @@
                 <div class="account-header row justify-between items-center q-mb-md">
                     <div class="text-subtitle1">{{ t('components.AccountsForm.account_label') }}</div>
                     <q-btn flat round color="negative" icon="delete" size="sm"
-                        :title="t('components.AccountsForm.delete')" @click="removeAccount(account.id)" />
+                        :title="t('components.AccountsForm.delete')" @click="showDeleteDialog(account.id)" />
                 </div>
 
                 <div class="account-fields">
@@ -101,8 +101,10 @@
 import { computed, ref, watch } from 'vue'
 import { useAccountsStore, type Account } from '../stores/accounts-store'
 import { useI18n } from 'vue-i18n'
+import { useQuasar } from 'quasar'
 
 const { t } = useI18n()
+const $q = useQuasar()
 const accountsStore = useAccountsStore()
 const accounts = computed(() => accountsStore.accounts)
 
@@ -218,19 +220,69 @@ const addAccount = () => {
     const newId = accountsStore.addAccount()
     // После добавления обновляем данные
     initializeAccountData()
+
+    // Показываем уведомление о добавлении
+    $q.notify({
+        type: 'positive',
+        message: t('common.success.success_create'),
+        position: 'top-right',
+        timeout: 3000
+    })
 }
 
 // Удаление учетной записи
 const removeAccount = (id: string) => {
-    accountsStore.removeAccount(id)
-    const accountIndex = accountData.value.findIndex(acc => acc.id === id)
-    if (accountIndex !== -1) {
-        accountData.value.splice(accountIndex, 1)
-    }
+    try {
+        accountsStore.removeAccount(id)
+        const accountIndex = accountData.value.findIndex(acc => acc.id === id)
+        if (accountIndex !== -1) {
+            accountData.value.splice(accountIndex, 1)
+        }
 
-    const newValidationErrors = { ...validationErrors.value }
-    delete newValidationErrors[id]
-    validationErrors.value = newValidationErrors
+        const newValidationErrors = { ...validationErrors.value }
+        delete newValidationErrors[id]
+        validationErrors.value = newValidationErrors
+
+        // Показываем успешное уведомление
+        $q.notify({
+            type: 'positive',
+            message: t('components.AccountsForm.notifications.delete_success'),
+            position: 'top-right',
+            timeout: 3000,
+            icon: 'check_circle'
+        })
+    } catch (error) {
+        // Показываем ошибку при удалении
+        $q.notify({
+            type: 'negative',
+            message: t('components.AccountsForm.notifications.delete_error'),
+            position: 'top-right',
+            timeout: 3000,
+            icon: 'error'
+        })
+        console.error('Error deleting account:', error)
+    }
+}
+
+// Диалог подтверждения удаления
+const showDeleteDialog = (accountId: string) => {
+    $q.dialog({
+        title: t('components.AccountsForm.delete_dialog.title'),
+        message: t('components.AccountsForm.delete_dialog.message'),
+        cancel: {
+            label: t('components.AccountsForm.delete_dialog.cancel'),
+            color: 'grey',
+            flat: true
+        },
+        ok: {
+            label: t('components.AccountsForm.delete_dialog.confirm'),
+            color: 'negative',
+            flat: true
+        },
+        persistent: true
+    }).onOk(() => {
+        removeAccount(accountId)
+    })
 }
 
 const getAccountErrors = (accountId: string) => {
@@ -244,10 +296,6 @@ watch(accounts, () => {
 </script>
 
 <style scoped lang="scss">
-/* стили остаются без изменений */
-</style>
-
-<style scoped lang="scss">
 .accounts-form {
     max-width: 800px;
     margin: 0 auto;
@@ -259,6 +307,13 @@ watch(accounts, () => {
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 }
 
 .label-hint {
@@ -287,6 +342,11 @@ watch(accounts, () => {
 
 .account-header {
     padding-bottom: 12px;
+
+    .account-actions {
+        display: flex;
+        gap: 8px;
+    }
 }
 
 .validation-errors {
@@ -321,10 +381,19 @@ watch(accounts, () => {
     margin-top: 24px;
 }
 
+.save-footer {
+    border-top: 1px solid #e0e0e0;
+    padding-top: 20px;
+}
+
 @media (max-width: 600px) {
     .form-header {
         flex-direction: column;
         align-items: stretch;
+
+        .header-actions {
+            justify-content: center;
+        }
     }
 
     .account-fields .row {

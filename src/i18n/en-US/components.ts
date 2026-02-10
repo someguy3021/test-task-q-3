@@ -42,6 +42,17 @@ export default {
       title: 'No accounts',
       message: 'Click "Add Account" to create first record'
     },
-    warning: 'Warning'
+    warning: 'Warning',
+    // New fields for dialog and notifications
+    delete_dialog: {
+      title: 'Delete Account',
+      message: 'Are you sure you want to delete this account?',
+      cancel: 'Cancel',
+      confirm: 'Delete'
+    },
+    notifications: {
+      delete_success: 'Account successfully deleted',
+      delete_error: 'Error deleting account'
+    }
   }
 } as const
