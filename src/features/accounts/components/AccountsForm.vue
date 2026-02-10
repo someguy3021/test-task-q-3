@@ -370,8 +370,9 @@ watch(accounts, () => {
 
     @media (min-width: $breakpoint-md-min) {
         display: flex;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: 1px solid var(--q-pageUtilityContrastLow);
         padding-bottom: 8px;
+        margin-bottom: 16px;
     }
 }
 
