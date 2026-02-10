@@ -1,14 +1,14 @@
 <template>
     <div class="accounts-form">
         <div class="form-header">
-            <h2 class="text-h5 q-mb-md">Управление учетными записями</h2>
-            <q-btn color="primary" icon="add" label="Добавить учетную запись" @click="addAccount" />
+            <h2 class="text-h5 q-mb-md">{{ t('components.AccountsForm.title') }}</h2>
+            <q-btn color="primary" icon="add" :label="t('components.AccountsForm.add_account')" @click="addAccount" />
         </div>
 
         <div class="label-hint q-mb-lg">
             <q-icon name="info" color="info" size="sm" />
             <span class="q-ml-sm text-caption">
-                Для указания нескольких меток для одной пары логин/пароль используйте разделитель ;
+                {{ t('components.AccountsForm.hint') }}
             </span>
         </div>
 
@@ -16,8 +16,9 @@
             <div v-for="account in accountData" :key="account.id" class="account-item q-mb-lg q-pa-md"
                 :class="{ 'invalid-account': !account.isValid }">
                 <div class="account-header row justify-between items-center q-mb-md">
-                    <div class="text-subtitle1">Учетная запись</div>
-                    <q-btn flat round color="negative" icon="delete" size="sm" @click="removeAccount(account.id)" />
+                    <div class="text-subtitle1">{{ t('components.AccountsForm.account_label') }}</div>
+                    <q-btn flat round color="negative" icon="delete" size="sm"
+                        :title="t('components.AccountsForm.delete')" @click="removeAccount(account.id)" />
                 </div>
 
                 <div class="account-fields">
@@ -25,11 +26,13 @@
                         <!-- Метка -->
                         <div class="col-12">
                             <q-input :model-value="account.label"
-                                @update:model-value="(value) => updateField(account.id, 'label', value)" label="Метка"
-                                hint="Максимум 50 символов" :maxlength="50" outlined
+                                @update:model-value="(value) => updateField(account.id, 'label', value)"
+                                :label="t('components.AccountsForm.label')"
+                                :hint="t('components.AccountsForm.label_hint')" :maxlength="50" outlined
                                 :error="hasError(account.id, 'label')" @blur="validateAccount(account.id)">
                                 <template v-slot:append>
-                                    <q-icon v-if="account.label.length > 45" name="warning" color="warning" />
+                                    <q-icon v-if="account.label.length > 45" name="warning" color="warning"
+                                        :title="t('components.AccountsForm.warning')" />
                                 </template>
                             </q-input>
                         </div>
@@ -38,14 +41,15 @@
                         <div class="col-12 col-md-6">
                             <q-select :model-value="account.type"
                                 @update:model-value="handleTypeChange(account.id, $event)" :options="typeOptions"
-                                label="Тип записи" outlined />
+                                :label="t('components.AccountsForm.type_label')" outlined />
                         </div>
 
                         <!-- Логин -->
                         <div class="col-12 col-md-6">
                             <q-input :model-value="account.login"
-                                @update:model-value="(value) => updateField(account.id, 'login', value)" label="Логин *"
-                                hint="Обязательное поле, максимум 100 символов" :maxlength="100" outlined
+                                @update:model-value="(value) => updateField(account.id, 'login', value)"
+                                :label="t('components.AccountsForm.login_label')"
+                                :hint="t('components.AccountsForm.login_hint')" :maxlength="100" outlined
                                 :error="hasError(account.id, 'login')" @blur="validateAccount(account.id)" />
                         </div>
 
@@ -53,8 +57,9 @@
                         <div v-if="account.type === 'local'" class="col-12">
                             <q-input :model-value="account.password || ''"
                                 @update:model-value="(value) => updateField(account.id, 'password', value)"
-                                label="Пароль *" hint="Обязательное поле, максимум 100 символов" :maxlength="100"
-                                type="password" outlined :error="hasError(account.id, 'password')"
+                                :label="t('components.AccountsForm.password_label')"
+                                :hint="t('components.AccountsForm.password_hint')" :maxlength="100" type="password"
+                                outlined :error="hasError(account.id, 'password')"
                                 @blur="validateAccount(account.id)" />
                         </div>
                     </div>
@@ -64,13 +69,13 @@
                 <div v-if="getAccountErrors(account.id).length > 0" class="validation-errors q-mt-sm">
                     <div v-for="error in getAccountErrors(account.id)" :key="error.field"
                         class="error-message text-negative text-caption">
-                        {{ error.message }}
+                        {{ t(error.message) }}
                     </div>
                 </div>
 
                 <!-- Преобразованная метка -->
                 <div v-if="account.labelArray.length > 0" class="label-preview q-mt-sm">
-                    <div class="text-caption text-grey">Метки (преобразованы в массив):</div>
+                    <div class="text-caption text-grey">{{ t('components.AccountsForm.labels_preview') }}</div>
                     <div class="label-chips">
                         <q-chip v-for="(labelItem, idx) in account.labelArray" :key="idx" size="sm" color="primary"
                             text-color="white">
@@ -84,9 +89,9 @@
         <!-- Пустое состояние -->
         <div v-if="accounts.length === 0" class="empty-state text-center q-pa-xl">
             <q-icon name="person_outline" size="xl" color="grey" />
-            <div class="text-h6 q-mt-md text-grey">Нет учетных записей</div>
+            <div class="text-h6 q-mt-md text-grey">{{ t('components.AccountsForm.empty_state.title') }}</div>
             <div class="text-caption q-mt-sm text-grey">
-                Нажмите "Добавить учетную запись", чтобы создать первую запись
+                {{ t('components.AccountsForm.empty_state.message') }}
             </div>
         </div>
     </div>
@@ -95,7 +100,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 import { useAccountsStore, type Account } from '../stores/accounts-store'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const accountsStore = useAccountsStore()
 const accounts = computed(() => accountsStore.accounts)
 
@@ -108,10 +115,10 @@ interface AccountData extends Account {
 const accountData = ref<AccountData[]>([])
 const validationErrors = ref<Record<string, Array<{ field: string; message: string }>>>({})
 
-const typeOptions = [
-    { label: 'LDAP', value: 'ldap' },
-    { label: 'Локальная', value: 'local' }
-]
+const typeOptions = computed(() => [
+    { label: t('components.AccountsForm.type_options.ldap'), value: 'ldap' },
+    { label: t('components.AccountsForm.type_options.local'), value: 'local' }
+])
 
 // Инициализация данных
 const initializeAccountData = () => {
@@ -166,20 +173,20 @@ const validateAccount = (accountId: string) => {
     const errors: Array<{ field: string; message: string }> = []
 
     if (!account.login.trim()) {
-        errors.push({ field: 'login', message: 'Логин обязателен для заполнения' })
+        errors.push({ field: 'login', message: 'components.AccountsForm.validation.login_required' })
     } else if (account.login.length > 100) {
-        errors.push({ field: 'login', message: 'Логин не может быть длиннее 100 символов' })
+        errors.push({ field: 'login', message: 'components.AccountsForm.validation.login_max_length' })
     }
 
     if (account.label.length > 50) {
-        errors.push({ field: 'label', message: 'Метка не может быть длиннее 50 символов' })
+        errors.push({ field: 'label', message: 'components.AccountsForm.validation.label_max_length' })
     }
 
     if (account.type === 'local') {
         if (!account.password) {
-            errors.push({ field: 'password', message: 'Пароль обязателен для локальной учетной записи' })
+            errors.push({ field: 'password', message: 'components.AccountsForm.validation.password_required' })
         } else if (account.password.length > 100) {
-            errors.push({ field: 'password', message: 'Пароль не может быть длиннее 100 символов' })
+            errors.push({ field: 'password', message: 'components.AccountsForm.validation.password_max_length' })
         }
     }
 
@@ -235,6 +242,10 @@ watch(accounts, () => {
     initializeAccountData()
 }, { immediate: true })
 </script>
+
+<style scoped lang="scss">
+/* стили остаются без изменений */
+</style>
 
 <style scoped lang="scss">
 .accounts-form {
