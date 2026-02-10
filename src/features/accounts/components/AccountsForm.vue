@@ -12,73 +12,92 @@
             </span>
         </div>
 
+        <!-- Заголовки столбцов для десктопа -->
+        <div class="desktop-header row q-mb-sm text-caption text-grey-7 q-px-md">
+            <div class="col-3">{{ t('components.AccountsForm.label') }}</div>
+            <div class="col-2">{{ t('components.AccountsForm.type_label') }}</div>
+            <div class="col-3">{{ t('components.AccountsForm.login_label') }}</div>
+            <div class="col-3">{{ t('components.AccountsForm.password_label') }}</div>
+            <div class="col-1 text-center">{{ t('components.AccountsForm.actions') }}</div>
+        </div>
+
         <div class="accounts-list">
-            <div v-for="account in accountData" :key="account.id" class="account-item q-mb-lg q-pa-md"
+            <div v-for="account in accountData" :key="account.id" class="account-item q-mb-sm q-pa-md"
                 :class="{ 'invalid-account': !account.isValid }">
-                <div class="account-header row justify-between items-center q-mb-md">
-                    <div class="text-subtitle1">{{ t('components.AccountsForm.account_label') }}</div>
-                    <q-btn flat round color="negative" icon="delete" size="md"
-                        :title="t('components.AccountsForm.delete')" @click="showDeleteDialog(account.id)" />
-                </div>
+                <div class="row items-center q-col-gutter-md">
+                    <!-- Метка -->
+                    <div class="col-12 col-md-3">
+                        <q-input :model-value="account.label"
+                            @update:model-value="(value) => updateField(account.id, 'label', value)"
+                            :placeholder="t('components.AccountsForm.label_placeholder')"
+                            :hint="t('components.AccountsForm.label_hint')" :maxlength="50" outlined dense autogrow
+                            :error="hasError(account.id, 'label')" @blur="validateAccount(account.id)">
+                            <template v-slot:append>
+                                <q-icon v-if="account.label.length > 45" name="warning" color="warning" size="xs" />
+                            </template>
+                        </q-input>
+                    </div>
 
-                <div class="account-fields">
-                    <div class="row q-col-gutter-md">
-                        <!-- Метка -->
-                        <div class="col-12">
-                            <q-input :model-value="account.label"
-                                @update:model-value="(value) => updateField(account.id, 'label', value)"
-                                :label="t('components.AccountsForm.label')"
-                                :hint="t('components.AccountsForm.label_hint')" :maxlength="50" outlined
-                                :error="hasError(account.id, 'label')" @blur="validateAccount(account.id)">
-                                <template v-slot:append>
-                                    <q-icon v-if="account.label.length > 45" name="warning" color="warning"
-                                        :title="t('components.AccountsForm.warning')" />
-                                </template>
-                            </q-input>
-                        </div>
+                    <!-- Тип записи -->
+                    <div class="col-12 col-md-2">
+                        <q-select :model-value="account.type" @update:model-value="handleTypeChange(account.id, $event)"
+                            :options="typeOptions" outlined dense emit-value map-options
+                            :error="hasError(account.id, 'type')" />
+                    </div>
 
-                        <!-- Тип записи -->
-                        <div class="col-12 col-md-6">
-                            <q-select :model-value="account.type"
-                                @update:model-value="handleTypeChange(account.id, $event)" :options="typeOptions"
-                                :label="t('components.AccountsForm.type_label')" outlined />
-                        </div>
+                    <!-- Логин -->
+                    <div class="col-12 col-md-3">
+                        <q-input :model-value="account.login"
+                            @update:model-value="(value) => updateField(account.id, 'login', value)"
+                            :placeholder="t('components.AccountsForm.login_placeholder')"
+                            :hint="t('components.AccountsForm.login_hint')" :maxlength="100" outlined dense
+                            :error="hasError(account.id, 'login')" @blur="validateAccount(account.id)" />
+                    </div>
 
-                        <!-- Логин -->
-                        <div class="col-12 col-md-6">
-                            <q-input :model-value="account.login"
-                                @update:model-value="(value) => updateField(account.id, 'login', value)"
-                                :label="t('components.AccountsForm.login_label')"
-                                :hint="t('components.AccountsForm.login_hint')" :maxlength="100" outlined
-                                :error="hasError(account.id, 'login')" @blur="validateAccount(account.id)" />
-                        </div>
+                    <!-- Пароль (только для локальных) -->
+                    <div v-if="account.type === 'local'" class="col-12 col-md-3">
+                        <q-input :model-value="account.password || ''"
+                            @update:model-value="(value) => updateField(account.id, 'password', value)"
+                            :placeholder="t('components.AccountsForm.password_placeholder')"
+                            :hint="t('components.AccountsForm.password_hint')" :maxlength="100"
+                            :type="account.showPassword ? 'text' : 'password'" outlined dense
+                            :error="hasError(account.id, 'password')" @blur="validateAccount(account.id)">
+                            <template v-slot:append>
+                                <q-icon :name="account.showPassword ? 'visibility_off' : 'visibility'"
+                                    class="cursor-pointer" @click="togglePasswordVisibility(account.id)" size="xs" />
+                            </template>
+                        </q-input>
+                    </div>
 
-                        <!-- Пароль (только для локальных) -->
-                        <div v-if="account.type === 'local'" class="col-12">
-                            <q-input :model-value="account.password || ''"
-                                @update:model-value="(value) => updateField(account.id, 'password', value)"
-                                :label="t('components.AccountsForm.password_label')"
-                                :hint="t('components.AccountsForm.password_hint')" :maxlength="100" type="password"
-                                outlined :error="hasError(account.id, 'password')"
-                                @blur="validateAccount(account.id)" />
+                    <!-- Пустая колонка для LDAP -->
+                    <div v-else class="col-12 col-md-3">
+                        <div class="text-caption text-grey-6 q-pa-sm bg-grey-2 rounded-borders">
+                            {{ t('components.AccountsForm.ldap_password_hint') }}
                         </div>
+                    </div>
+
+                    <!-- Кнопка удаления -->
+                    <div class="col-12 col-md-1 text-center">
+                        <q-btn flat round color="negative" icon="delete" size="md"
+                            :title="t('components.AccountsForm.delete')" @click="showDeleteDialog(account.id)" />
                     </div>
                 </div>
 
-                <!-- Отображение ошибок -->
+                <!-- Отображение ошибок валидации -->
                 <div v-if="getAccountErrors(account.id).length > 0" class="validation-errors q-mt-sm">
                     <div v-for="error in getAccountErrors(account.id)" :key="error.field"
                         class="error-message text-negative text-caption">
-                        {{ t(error.message) }}
+                        <q-icon name="error" size="xs" />
+                        <span class="q-ml-xs">{{ t(error.message) }}</span>
                     </div>
                 </div>
 
-                <!-- Преобразованная метка -->
+                <!-- Предпросмотр меток (чипы) -->
                 <div v-if="account.labelArray.length > 0" class="label-preview q-mt-sm">
-                    <div class="text-caption text-grey">{{ t('components.AccountsForm.labels_preview') }}</div>
-                    <div class="label-chips">
+                    <div class="text-caption text-grey-6">{{ t('components.AccountsForm.labels_preview') }}</div>
+                    <div class="label-chips q-mt-xs">
                         <q-chip v-for="(labelItem, idx) in account.labelArray" :key="idx" size="sm" color="primary"
-                            text-color="white">
+                            text-color="white" dense>
                             {{ labelItem.text }}
                         </q-chip>
                     </div>
@@ -108,10 +127,10 @@ const $q = useQuasar()
 const accountsStore = useAccountsStore()
 const accounts = computed(() => accountsStore.accounts)
 
-// Локальные копии с расширенными данными
 interface AccountData extends Account {
     labelArray: Array<{ text: string }>
     isValid: boolean
+    showPassword: boolean
 }
 
 const accountData = ref<AccountData[]>([])
@@ -122,41 +141,56 @@ const typeOptions = computed(() => [
     { label: t('components.AccountsForm.type_options.local'), value: 'local' }
 ])
 
-// Инициализация данных
 const initializeAccountData = () => {
     accountData.value = accounts.value.map(account => ({
         ...account,
         labelArray: accountsStore.getLabelArray(account.label),
-        isValid: accountsStore.validateAccount(account)
+        isValid: accountsStore.validateAccount(account),
+        showPassword: false
     }))
 
-    // Инициализация ошибок валидации
     accounts.value.forEach(account => {
         validateAccount(account.id)
     })
 }
 
-// Обработчик изменения типа
 const handleTypeChange = (accountId: string, value: 'ldap' | 'local') => {
-    updateField(accountId, 'type', value)
+    const accountIndex = accountData.value.findIndex(acc => acc.id === accountId)
+    if (accountIndex === -1) return
+
+    const account = accountData.value[accountIndex]
+    if (!account) return
+
+    // Обновляем локальные данные
+    const updatedAccount = {
+        ...account,
+        type: value,
+        // При смене на LDAP сбрасываем пароль
+        ...(value === 'ldap' ? { password: null } : {})
+    }
+
+    accountData.value[accountIndex] = updatedAccount
     validateAccount(accountId)
+
+    // Сохраняем в хранилище
+    accountsStore.updateAccount(accountId, {
+        type: value,
+        ...(value === 'ldap' ? { password: null } : {})
+    })
 }
 
-// Обновление поля
 const updateField = (accountId: string, field: keyof Account, value: any) => {
     const accountIndex = accountData.value.findIndex(acc => acc.id === accountId)
     if (accountIndex === -1) return
 
     const account = accountData.value[accountIndex]
-    if (!account) return // Добавляем проверку на существование
+    if (!account) return
 
-    // Обновляем локальные данные
     const updatedAccount = {
         ...account,
         [field]: value
     }
 
-    // Пересчитываем labelArray если обновилась метка
     if (field === 'label') {
         updatedAccount.labelArray = accountsStore.getLabelArray(value)
     }
@@ -164,13 +198,12 @@ const updateField = (accountId: string, field: keyof Account, value: any) => {
     accountData.value[accountIndex] = updatedAccount
 }
 
-// Валидация учетной записи
 const validateAccount = (accountId: string) => {
     const accountIndex = accountData.value.findIndex(acc => acc.id === accountId)
     if (accountIndex === -1) return
 
     const account = accountData.value[accountIndex]
-    if (!account) return // Добавляем проверку на существование
+    if (!account) return
 
     const errors: Array<{ field: string; message: string }> = []
 
@@ -209,19 +242,28 @@ const validateAccount = (accountId: string) => {
     }
 }
 
-// Проверка, есть ли ошибки для конкретного поля
+const togglePasswordVisibility = (accountId: string) => {
+    const accountIndex = accountData.value.findIndex(acc => acc.id === accountId)
+    if (accountIndex === -1) return
+
+    const account = accountData.value[accountIndex]
+    if (!account || account.type !== 'local') return
+
+    accountData.value[accountIndex] = {
+        ...account,
+        showPassword: !account.showPassword
+    }
+}
+
 const hasError = (accountId: string, field: string): boolean => {
     const accountErrors = validationErrors.value[accountId]
     return accountErrors?.some(error => error.field === field) || false
 }
 
-// Добавление новой учетной записи
 const addAccount = () => {
     const newId = accountsStore.addAccount()
-    // После добавления обновляем данные
     initializeAccountData()
 
-    // Показываем уведомление о добавлении
     $q.notify({
         type: 'positive',
         message: t('common.success.success_create'),
@@ -230,7 +272,6 @@ const addAccount = () => {
     })
 }
 
-// Удаление учетной записи
 const removeAccount = (id: string) => {
     try {
         accountsStore.removeAccount(id)
@@ -243,7 +284,6 @@ const removeAccount = (id: string) => {
         delete newValidationErrors[id]
         validationErrors.value = newValidationErrors
 
-        // Показываем успешное уведомление
         $q.notify({
             type: 'positive',
             message: t('components.AccountsForm.notifications.delete_success'),
@@ -252,7 +292,6 @@ const removeAccount = (id: string) => {
             icon: 'check_circle'
         })
     } catch (error) {
-        // Показываем ошибку при удалении
         $q.notify({
             type: 'negative',
             message: t('components.AccountsForm.notifications.delete_error'),
@@ -264,7 +303,6 @@ const removeAccount = (id: string) => {
     }
 }
 
-// Диалог подтверждения удаления
 const showDeleteDialog = (accountId: string) => {
     $q.dialog({
         title: t('components.AccountsForm.delete_dialog.title'),
@@ -289,7 +327,6 @@ const getAccountErrors = (accountId: string) => {
     return validationErrors.value[accountId] || []
 }
 
-// Синхронизация при изменении accounts
 watch(accounts, () => {
     initializeAccountData()
 }, { immediate: true })
@@ -297,7 +334,7 @@ watch(accounts, () => {
 
 <style scoped lang="scss">
 .accounts-form {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -307,55 +344,60 @@ watch(accounts, () => {
     align-items: center;
     flex-wrap: wrap;
     gap: 16px;
-
-    .header-actions {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
+    margin-bottom: 24px;
 }
 
 .label-hint {
-    background-color: #98d4ff73;
-    padding: 12px;
+    background-color: rgba(152, 212, 255, 0.45);
+    padding: 12px 16px;
     border-radius: 8px;
     display: flex;
     align-items: center;
+    margin-bottom: 24px;
+}
+
+.desktop-header {
+    display: none;
+
+    @media (min-width: $breakpoint-md-min) {
+        display: flex;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 8px;
+    }
 }
 
 .account-item {
-    border: 2px solid #e0e0e0;
+    border: 1px solid #e0e0e09c;
     border-radius: 8px;
     transition: all 0.3s ease;
 
     &.invalid-account {
         border-color: #f44336;
-        background-color: rgba(244, 67, 54, 0.05);
+        background-color: rgba(244, 67, 54, 0.03);
     }
 
     &:hover {
-        border-color: #1976d2;
+        border-color: var(--q-primary);
         box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
     }
-}
 
-.account-header {
-    padding-bottom: 12px;
-
-    .account-actions {
-        display: flex;
-        gap: 8px;
+    @media (min-width: $breakpoint-md-min) {
+        .row>div {
+            margin-bottom: 0;
+        }
     }
 }
 
 .validation-errors {
-    background-color: rgba(244, 67, 54, 0.1);
-    padding: 8px;
+    background-color: rgba(244, 67, 54, 0.05);
+    padding: 8px 12px;
     border-radius: 4px;
+    border-left: 3px solid #f44336;
 }
 
 .error-message {
+    display: flex;
+    align-items: center;
     margin-bottom: 4px;
 
     &:last-child {
@@ -364,40 +406,51 @@ watch(accounts, () => {
 }
 
 .label-preview {
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid #f0f0f0;
     padding-top: 12px;
+    margin-top: 12px;
 }
 
 .label-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 4px;
-    margin-top: 8px;
+    margin-top: 4px;
 }
 
 .empty-state {
     border: 2px dashed #e0e0e0;
     border-radius: 8px;
-    margin-top: 24px;
+    margin-top: 32px;
+    background-color: #fafafa;
 }
 
-.save-footer {
-    border-top: 1px solid #e0e0e0;
-    padding-top: 20px;
-}
-
-@media (max-width: 600px) {
+// Адаптивность
+@media (max-width: $breakpoint-sm-max) {
     .form-header {
         flex-direction: column;
         align-items: stretch;
-
-        .header-actions {
-            justify-content: center;
-        }
+        text-align: center;
     }
 
-    .account-fields .row {
-        margin: 0;
+    .account-item {
+        .row>div {
+            margin-bottom: 12px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+@media (min-width: $breakpoint-md-min) {
+    .accounts-form {
+        padding: 0 16px;
+    }
+
+    .account-item {
+        padding: 16px;
     }
 }
 </style>

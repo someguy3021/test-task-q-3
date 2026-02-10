@@ -53,6 +53,11 @@ export default {
     notifications: {
       delete_success: 'Account successfully deleted',
       delete_error: 'Error deleting account'
-    }
+    },
+    actions: 'Actions',
+    label_placeholder: 'Enter label...',
+    login_placeholder: 'Enter login...',
+    password_placeholder: 'Enter password...',
+    ldap_password_hint: 'Not required for LDAP',
   }
 } as const

@@ -67,6 +67,11 @@ export default {
     notifications: {
       delete_success: 'Учетная запись успешно удалена',
       delete_error: 'Ошибка при удалении учетной записи'
-    }
+    },
+    actions: 'Действия',
+    label_placeholder: 'Введите метку...',
+    login_placeholder: 'Введите логин...',
+    password_placeholder: 'Введите пароль...',
+    ldap_password_hint: 'Для LDAP не требуется'
   }
 } as const

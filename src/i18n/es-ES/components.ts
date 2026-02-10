@@ -53,6 +53,11 @@ export default {
     notifications: {
       delete_success: 'Cuenta eliminada exitosamente',
       delete_error: 'Error al eliminar la cuenta'
-    }
+    },
+    actions: 'Acciones',
+    label_placeholder: 'Introducir etiqueta...',
+    login_placeholder: 'Introducir inicio de sesión...',
+    password_placeholder: 'Introducir contraseña...',
+    ldap_password_hint: 'No requerido para LDAP',
   }
 } as const
