@@ -16,7 +16,7 @@
             <q-card class="q-mb-xl" flat bordered>
                 <q-card-section>
                     <div class="text-h4 q-mb-md">
-                        {{ t('AboutThisProjectPage.implementedFeatures.title', 'Выполнение технического задания') }}
+                        {{ t('pages.AboutThisProjectPage.testtaskcompletion') }}
                     </div>
 
                     <q-list bordered separator>

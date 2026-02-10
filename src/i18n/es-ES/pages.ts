@@ -127,6 +127,7 @@ export default {
       build: 'Compilación: quasar build',
       deploy: 'Despliegue en plataforma Vercel'
     },
+    testtaskcompletion: 'Cumplimiento de especificaciones técnicas',
     implementedFeatures: {
       formManagement: {
         title: 'Formulario de gestión de cuentas',

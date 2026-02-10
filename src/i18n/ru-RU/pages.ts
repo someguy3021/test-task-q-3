@@ -127,6 +127,7 @@ export default {
       build: 'Сборка: quasar build',
       deploy: 'Деплой на платформе Vercel'
     },
+    testtaskcompletion: 'Выполнение технического задания',
     implementedFeatures: {
       formManagement: {
         title: 'Форма управления учетными записями',

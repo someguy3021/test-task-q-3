@@ -127,6 +127,7 @@ export default {
       build: 'Build: quasar build',
       deploy: 'Deploy on Vercel platform'
     },
+    testtaskcompletion: 'Fulfillment of technical specifications',
     implementedFeatures: {
       formManagement: {
         title: 'Account Management Form',
