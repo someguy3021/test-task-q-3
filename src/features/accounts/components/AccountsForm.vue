@@ -123,7 +123,7 @@ import { computed, ref, watch } from 'vue'
 import { useAccountsStore } from '../stores/accounts-store'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
-import { useAccountValidation, useAccountFormatting } from 'src/shared/composables/use-account-composables'
+import { useAccountValidation, useAccountFormatting } from 'src/features/accounts/composables/use-account-composables'
 
 const { t } = useI18n()
 const $q = useQuasar()
