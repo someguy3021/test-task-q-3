@@ -11,7 +11,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
     "build": "quasar build",
-    "postinstall": "quasar prepare"
+    "postinstall": "quasar prepare",
+    "vercel_build_and_deploy": "quasar build && cd dist/spa && vercel --prod"
   },
   "dependencies": {
     "axios": "^1.2.1",
