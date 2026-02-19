@@ -6,4 +6,5 @@ export const STORAGE_KEYS = {
     THEME_DARK: 'testtask_theme_dark',
     SHOW_BOTTOM_MENU: 'testtask_show_bottom_menu',
     ONLY_SIDE_MENU_LINKS: 'testtask_only_side_menu_links',
+    ACCOUNTS: 'testtask_accounts',
 } as const;

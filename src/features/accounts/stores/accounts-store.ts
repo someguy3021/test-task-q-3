@@ -1,43 +1,14 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-
-export interface AccountLabel {
-  text: string
-}
-
-export interface Account {
-  id: string
-  label: string
-  type: 'ldap' | 'local'
-  login: string
-  password: string | null
-}
-
-export interface AccountUpdate {
-  label?: string
-  type?: 'ldap' | 'local'
-  login?: string
-  password?: string | null
-}
+import { computed } from 'vue'
+import { useLocalStorage } from 'src/shared/composables/use-local-storage'
+import { STORAGE_KEYS } from 'src/shared/constants/storage-keys'
+import { type Account, type AccountUpdate } from 'src/shared/utils/account-utils'
 
 export const useAccountsStore = defineStore('accounts', () => {
-  const accounts = ref<Account[]>([])
-
-  // Загрузка из localStorage при инициализации
-  const loadFromStorage = () => {
-    const saved = localStorage.getItem('accounts')
-    if (saved) {
-      accounts.value = JSON.parse(saved)
-    }
-  }
-
-  // Сохранение в localStorage
-  const saveToStorage = () => {
-    localStorage.setItem('accounts', JSON.stringify(accounts.value))
-  }
-
-  // Инициализация
-  loadFromStorage()
+  const { value: accounts, setValue: saveToStorage } = useLocalStorage<Account[]>(
+    STORAGE_KEYS.ACCOUNTS,
+    []
+  )
 
   // Добавление новой пустой записи
   const addAccount = () => {
@@ -49,7 +20,7 @@ export const useAccountsStore = defineStore('accounts', () => {
       password: null
     }
     accounts.value.push(newAccount)
-    saveToStorage()
+    saveToStorage(accounts.value)
     return newAccount.id
   }
 
@@ -58,7 +29,7 @@ export const useAccountsStore = defineStore('accounts', () => {
     const index = accounts.value.findIndex(account => account.id === id)
     if (index !== -1) {
       accounts.value.splice(index, 1)
-      saveToStorage()
+      saveToStorage(accounts.value)
     }
   }
 
@@ -69,7 +40,7 @@ export const useAccountsStore = defineStore('accounts', () => {
 
     const currentAccount = accounts.value[index]
     if (!currentAccount) return // Добавляем проверку на существование
-    
+
     // Создаем обновленную запись
     const updatedAccount: Account = {
       id: currentAccount.id,
@@ -78,14 +49,14 @@ export const useAccountsStore = defineStore('accounts', () => {
       login: updates.login !== undefined ? updates.login : currentAccount.login,
       password: updates.password !== undefined ? updates.password : currentAccount.password
     }
-    
+
     // Если тип LDAP, пароль должен быть null
     if (updatedAccount.type === 'ldap') {
       updatedAccount.password = null
     }
-    
+
     accounts.value[index] = updatedAccount
-    saveToStorage()
+    saveToStorage(accounts.value)
   }
 
   // Получение записи по ID
@@ -93,33 +64,11 @@ export const useAccountsStore = defineStore('accounts', () => {
     return accounts.value.find(account => account.id === id)
   }
 
-  // Преобразование метки в массив объектов
-  const getLabelArray = (labelString: string): AccountLabel[] => {
-    if (!labelString.trim()) return []
-    return labelString
-      .split(';')
-      .map(item => item.trim())
-      .filter(item => item.length > 0)
-      .map(text => ({ text }))
-  }
-
-  // Валидация учетной записи
-  const validateAccount = (account: Account): boolean => {
-    if (!account.login.trim()) return false
-    if (account.type === 'local' && !account.password) return false
-    if (account.login.length > 100) return false
-    if (account.password && account.password.length > 100) return false
-    if (account.label.length > 50) return false
-    return true
-  }
-
   return {
     accounts: computed(() => accounts.value),
     getAccountById,
     addAccount,
     removeAccount,
-    updateAccount,
-    getLabelArray,
-    validateAccount
+    updateAccount
   }
 })

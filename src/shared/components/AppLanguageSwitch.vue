@@ -11,6 +11,7 @@
 import { useI18n } from "vue-i18n";
 import { onMounted, computed, onBeforeUnmount } from "vue";
 import { STORAGE_KEYS } from "src/shared/constants/storage-keys";
+import { setLocalStorageItem } from "src/shared/composables/use-local-storage";
 
 export default {
   setup() {
@@ -28,7 +29,7 @@ export default {
       get: () => locale.value,
       set: (value) => {
         locale.value = value;
-        localStorage.setItem(STORAGE_KEYS.USER_LOCALE, value);
+        setLocalStorageItem(STORAGE_KEYS.USER_LOCALE, value);
       }
     });
 

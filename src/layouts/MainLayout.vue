@@ -151,6 +151,7 @@ import AppLanguageSwitch from "src/shared/components/AppLanguageSwitch.vue";
 import AppThemeSwitcher from "src/shared/components/AppThemeSwitcher.vue";
 import { useI18n } from 'vue-i18n';
 import { STORAGE_KEYS } from 'src/shared/constants/storage-keys';
+import { useLocalStorage } from 'src/shared/composables/use-local-storage';
 
 interface Breadcrumb {
   labelKey: string;
@@ -183,29 +184,16 @@ const { t } = useI18n();
 
 const leftDrawerOpen = ref(false);
 
-// Получение начальных значений из localStorage
-const initialShowBottomMenu = () => {
-  const saved = localStorage.getItem(STORAGE_KEYS.SHOW_BOTTOM_MENU);
-  return saved !== null ? JSON.parse(saved) : true;
-};
-
-const initialOnlySideMenuLinks = () => {
-  const saved = localStorage.getItem(STORAGE_KEYS.ONLY_SIDE_MENU_LINKS);
-  return saved !== null ? JSON.parse(saved) : false;
-};
-
 // Реактивные переменные с сохранением в localStorage
-const showBottomMenu = ref(initialShowBottomMenu());
-const onlySideMenuLinks = ref(initialOnlySideMenuLinks());
+const { value: showBottomMenu } = useLocalStorage<boolean>(
+  STORAGE_KEYS.SHOW_BOTTOM_MENU,
+  true
+);
 
-// Watchers для сохранения изменений в localStorage
-watch(showBottomMenu, (newValue) => {
-  localStorage.setItem(STORAGE_KEYS.SHOW_BOTTOM_MENU, JSON.stringify(newValue));
-});
-
-watch(onlySideMenuLinks, (newValue) => {
-  localStorage.setItem(STORAGE_KEYS.ONLY_SIDE_MENU_LINKS, JSON.stringify(newValue));
-});
+const { value: onlySideMenuLinks } = useLocalStorage<boolean>(
+  STORAGE_KEYS.ONLY_SIDE_MENU_LINKS,
+  false
+);
 
 // const userDisplayName = computed(() => authStore.getUser?.name || 'Admin');
 

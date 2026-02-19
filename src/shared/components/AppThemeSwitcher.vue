@@ -7,6 +7,7 @@
 import { computed, onMounted } from "vue";
 import { useQuasar } from "quasar";
 import { STORAGE_KEYS } from "src/shared/constants/storage-keys";
+import { getLocalStorageItem, setLocalStorageItem } from "src/shared/composables/use-local-storage";
 
 defineOptions({
   name: "AppThemeSwitcher",
@@ -19,15 +20,15 @@ const themeDarkSwitch = computed({
   get: () => $q.dark.isActive,
   set: (value) => {
     $q.dark.set(value);
-    localStorage.setItem(STORAGE_KEYS.THEME_DARK, JSON.stringify(value));
+    setLocalStorageItem(STORAGE_KEYS.THEME_DARK, value);
   },
 });
 
 onMounted(() => {
   // Check localStorage for saved theme preference
-  const savedTheme = localStorage.getItem(STORAGE_KEYS.THEME_DARK);
+  const savedTheme = getLocalStorageItem<boolean>(STORAGE_KEYS.THEME_DARK);
   if (savedTheme !== null) {
-    themeDarkSwitch.value = JSON.parse(savedTheme);
+    themeDarkSwitch.value = savedTheme;
   } else {
     // If no preference is found, set dark mode as default
     themeDarkSwitch.value = true;
