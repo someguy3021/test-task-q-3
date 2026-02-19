@@ -34,7 +34,7 @@
                     <!-- Метка (TextArea с авторастягиванием) -->
                     <div class="col-12 col-md-3">
                         <q-input :model-value="account.label"
-                            @update:model-value="(value) => updateField(account.id, 'label', value)"
+                            @update:model-value="(value) => updateField(account.id, 'label', String(value ?? ''))"
                             :placeholder="t('components.AccountsForm.label_placeholder')"
                             :hint="t('components.AccountsForm.label_hint')" :maxlength="50" outlined dense
                             type="textarea" autogrow :error="hasError(account.id, 'label')"
@@ -55,7 +55,7 @@
                     <!-- Логин (растягивается для LDAP) -->
                     <div :class="getLoginColumnClass(account.type)">
                         <q-input :model-value="account.login"
-                            @update:model-value="(value) => updateField(account.id, 'login', value)"
+                            @update:model-value="(value) => updateField(account.id, 'login', String(value ?? ''))"
                             :placeholder="t('components.AccountsForm.login_placeholder')"
                             :hint="t('components.AccountsForm.login_hint')" :maxlength="100" outlined dense
                             :error="hasError(account.id, 'login')" @blur="validateAccount(account.id)" />
@@ -64,7 +64,7 @@
                     <!-- Пароль (только для локальных) -->
                     <div v-if="account.type === 'local'" class="col-12 col-md-3">
                         <q-input :model-value="account.password || ''"
-                            @update:model-value="(value) => updateField(account.id, 'password', value)"
+                            @update:model-value="(value) => updateField(account.id, 'password', String(value ?? ''))"
                             :placeholder="t('components.AccountsForm.password_placeholder')"
                             :hint="t('components.AccountsForm.password_hint')" :maxlength="100"
                             :type="account.showPassword ? 'text' : 'password'" outlined dense
@@ -204,7 +204,7 @@ const handleTypeChange = (accountId: string, value: 'ldap' | 'local') => {
     })
 }
 
-const updateField = (accountId: string, field: keyof AccountData, value: any) => {
+const updateField = (accountId: string, field: keyof AccountData, value: string) => {
     const accountIndex = accountData.value.findIndex(acc => acc.id === accountId)
     if (accountIndex === -1) return
 
