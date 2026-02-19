@@ -120,19 +120,29 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
-import { useAccountsStore, type Account } from '../stores/accounts-store'
+import { useAccountsStore } from '../stores/accounts-store'
 import { useI18n } from 'vue-i18n'
 import { useQuasar } from 'quasar'
+import { useAccountValidation, useAccountFormatting } from 'src/shared/composables/use-account-composables'
 
 const { t } = useI18n()
 const $q = useQuasar()
 const accountsStore = useAccountsStore()
 const accounts = computed(() => accountsStore.accounts)
 
-interface AccountData extends Account {
-    labelArray: Array<{ text: string }>
-    isValid: boolean
-    showPassword: boolean
+// Используем новые композаблы
+const { validateAccount: validateAccountUtil } = useAccountValidation()
+const { getLabelArray: getLabelArrayUtil } = useAccountFormatting()
+
+interface AccountData {
+    id: string;
+    label: string;
+    type: 'ldap' | 'local';
+    login: string;
+    password: string | null;
+    labelArray: Array<{ text: string }>;
+    isValid: boolean;
+    showPassword: boolean;
 }
 
 const accountData = ref<AccountData[]>([])
@@ -143,10 +153,10 @@ const typeOptions = computed(() => [
     { label: t('components.AccountsForm.type_options.local'), value: 'local' }
 ])
 
-
 const hasLocalAccount = computed(() => {
     return accountData.value.some(account => account.type === 'local')
 })
+
 const getLoginColumnClass = (accountType?: 'ldap' | 'local') => {
     if (accountType === 'ldap') {
         return 'col-12 col-md-6'
@@ -159,8 +169,8 @@ const getLoginColumnClass = (accountType?: 'ldap' | 'local') => {
 const initializeAccountData = () => {
     accountData.value = accounts.value.map(account => ({
         ...account,
-        labelArray: accountsStore.getLabelArray(account.label),
-        isValid: accountsStore.validateAccount(account),
+        labelArray: getLabelArrayUtil(account.label),
+        isValid: validateAccountUtil(account),
         showPassword: false
     }))
 
@@ -194,7 +204,7 @@ const handleTypeChange = (accountId: string, value: 'ldap' | 'local') => {
     })
 }
 
-const updateField = (accountId: string, field: keyof Account, value: any) => {
+const updateField = (accountId: string, field: keyof AccountData, value: any) => {
     const accountIndex = accountData.value.findIndex(acc => acc.id === accountId)
     if (accountIndex === -1) return
 
@@ -207,7 +217,7 @@ const updateField = (accountId: string, field: keyof Account, value: any) => {
     }
 
     if (field === 'label') {
-        updatedAccount.labelArray = accountsStore.getLabelArray(value)
+        updatedAccount.labelArray = getLabelArrayUtil(value)
     }
 
     accountData.value[accountIndex] = updatedAccount
@@ -276,7 +286,7 @@ const hasError = (accountId: string, field: string): boolean => {
 }
 
 const addAccount = () => {
-    const newId = accountsStore.addAccount()
+    accountsStore.addAccount()
     initializeAccountData()
 
     $q.notify({
