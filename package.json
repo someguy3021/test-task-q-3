@@ -12,7 +12,8 @@
     "dev": "quasar dev",
     "build": "quasar build",
     "postinstall": "quasar prepare",
-    "vercel_build_and_deploy": "quasar build && cd dist/spa && vercel --prod"
+    "vercel_build_and_deploy": "quasar build && cd dist && vercel --prod",
+    "vercel_deploy_web": "cd dist && vercel --prod"
   },
   "dependencies": {
     "axios": "^1.2.1",
