@@ -193,7 +193,8 @@
 import { useI18n } from 'vue-i18n';
 import { computed } from 'vue';
 
-const { t, tm } = useI18n();
+const i18n = useI18n();
+const t = i18n.t;
 
 // Технологии - статические, но с переведенными описаниями
 const technologies = computed(() => [
@@ -332,27 +333,27 @@ const implementedFeatures = computed(() => [
     {
         title: t('pages.AboutThisProjectPage.implementedFeatures.formManagement.title'),
         desc: t('pages.AboutThisProjectPage.implementedFeatures.formManagement.desc'),
-        details: tm('pages.AboutThisProjectPage.implementedFeatures.formManagement.details')
+        details: i18n.tm('pages.AboutThisProjectPage.implementedFeatures.formManagement.details')
     },
     {
         title: t('pages.AboutThisProjectPage.implementedFeatures.accountTypes.title'),
         desc: t('pages.AboutThisProjectPage.implementedFeatures.accountTypes.desc'),
-        details: tm('pages.AboutThisProjectPage.implementedFeatures.accountTypes.details')
+        details: i18n.tm('pages.AboutThisProjectPage.implementedFeatures.accountTypes.details')
     },
     {
         title: t('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.title'),
         desc: t('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.desc'),
-        details: tm('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.details')
+        details: i18n.tm('pages.AboutThisProjectPage.implementedFeatures.fieldValidation.details')
     },
     {
         title: t('pages.AboutThisProjectPage.implementedFeatures.statePersistence.title'),
         desc: t('pages.AboutThisProjectPage.implementedFeatures.statePersistence.desc'),
-        details: tm('pages.AboutThisProjectPage.implementedFeatures.statePersistence.details')
+        details: i18n.tm('pages.AboutThisProjectPage.implementedFeatures.statePersistence.details')
     },
     {
         title: t('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.title'),
         desc: t('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.desc'),
-        details: tm('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.details')
+        details: i18n.tm('pages.AboutThisProjectPage.implementedFeatures.responsiveDesign.details')
     }
 ])
 </script>
